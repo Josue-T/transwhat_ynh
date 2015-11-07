@@ -1,0 +1,61 @@
+#!/bin/bash
+
+app=transwhat
+domain=$(sudo yunohost app setting $app domain)
+path=$(sudo yunohost app setting $app path)
+final_path=/opt/yunohost/transwhat
+root_pwd=$(sudo cat /etc/yunohost/mysql)
+db_user=transwhat
+yowsup_version=2.4
+
+# Stop service
+sudo service spectrum stop
+sudo service transwhat stop
+
+# Delete databases
+mysql -u root -p$root_pwd -e "DROP DATABASE transwhat ; DROP USER $db_user@localhost ; DROP DATABASE spectrum "
+
+# Delete package
+sudo apt-get autoremove -y libtransport2.0 libtransport-plugin2.0 spectrum2 # spectrum2-backend-libpurple
+
+# Delete transwhat files
+sudo rm -rf $final_path
+
+# Delete yowsup
+sudo rm -rf /usr/local/lib/python2.7/dist-packages/yowsup2-$yowsup_version-py2.7.egg
+sudo rm -rf /usr/local/bin/yowsup-cli
+
+# Delete user
+sudo userdel transwhat
+
+# Delete service to systemd
+sudo systemctl disable spectrum.service
+sudo rm -rf /etc/systemd/system/spectrum.service
+sudo systemctl daemon-reload
+
+# Delete metronome's config
+sudo rm -rf /etc/metronome/conf.d/transwhat.$domain.cfg.lua
+
+# Delete spectrum2's config
+sudo rm -rf /etc/spectrum2
+
+# Delete subdomain in hosts file
+sudo sed -i "s@127.0.0.1          transwhat.$domain@@g" /etc/hosts
+
+# Suppression de la config nginx de la webapp
+sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
+
+# Delete logrotate
+sudo rm -rf /etc/logrotate.d/transwhat
+
+# Delete web doc directory
+sudo rm -rf /var/www/transwhat
+
+# Clean some file
+sudo rm -rf /var/lib/spectrum2
+
+# Reload Nginx and regenerate SSOwat conf
+sudo service rsyslog restart
+sudo service nginx reload
+sudo service metronome reload
+sudo yunohost app ssowatconf

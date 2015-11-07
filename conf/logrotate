@@ -1,0 +1,6 @@
+/var/log/spectrum2/DOMAIN/*.log /var/log/spectrum2/DOMAIN/backends/*.log {
+        daily
+        rotate 14
+        compress
+        delaycompress
+}

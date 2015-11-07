@@ -1,0 +1,54 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Transwhat configuration</title>
+    <link href="main.css" media="all" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <header>
+        <img src="whatsapp-logo.png" />
+        <img src="xmpp-logo.png" />
+    </header>
+
+    <section class="configuration">
+        <h1>Configuration</h1>
+        <h2>Get whatsapp password</h2>
+	<p>
+		You can get whatsapp password on anywhere linux machin.<br />
+		<br />
+		put this command :<br />
+		<br />
+		wget https://github.com/tgalal/yowsup/archive/v2.4.zip<br />
+		unzip yowsup-2.4.zip<br />
+		cd yowsup-2.4<br />
+		chmod u+x yowsup-cli<br />
+		./yowsup-cli registration -p your-full-phone-number -C country-code -r sms<br />
+		./yowsup-cli registration -p your-full-phone-number -C country-code -R no-of-code-recived-with-last-command<br />
+		<br />
+		Your full phone number including the country code you defined in 'C', without preceeding '+' or '00'<br />
+		For country code. See http://www.ipipi.com/help/telephone-country-codes.htm.<br />
+		Save the whatsapp code for next step.<br />
+	</p>
+	<h2>Configure with pidgin</h2>
+	<p>
+		Enable discovery service plugin in pidgin.<br />
+		Go do discovery service.<br />
+		Search service name "TransWhat"<br />
+		Clic on register<br />
+		Put your phone number and password (got from last step).<br />
+	</p>
+    </section>
+
+    <section class="documentation">
+        <h1>Documentation</h1>
+        <ul>
+            <li><a href="https://dev.0l.de/wiki/projects/transwhat/start" target="_blank">Official web site</a></li>
+            <li><a href="https://github.com/Josue-T/transwhat_ynh" target="_blank">Github repository and documentation</a></li>
+        </ul>
+    </section>
+
+</body>
+</html>

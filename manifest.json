@@ -1,0 +1,54 @@
+{
+    "name": "Transwhat",
+    "id": "transwhat",
+    "description": {
+        "en": "A getway to whatsapp from Jabber",
+        "fr": "Une passerelle whatsapp depuis Jabber"
+    },
+    "license": "GPL-3",
+    "developer": {
+        "name": "Josué Tille",
+        "email": "josue@familletille.ch",
+        "url": "https://myhost.familletille.ch"
+    },
+    "multi_instance": "false",
+    "arguments": {
+        "install" : [
+            {
+                "name": "domain",
+                "ask": {
+                    "en": "Choose a domain for your Transwhat",
+                    "fr": "Choisissez un domaine pour Transwhat"
+                },
+                "example": "domain.org"
+            },
+            {
+                "name": "path",
+                "ask": {
+                    "en": "Choose a path for your transwhat",
+                    "fr": "Choisissez un chemin pour transwhat"
+                },
+                "example": "/transwhat",
+                "default": "/transwhat"
+            },
+            {
+                "name": "admin",
+                "ask": {
+                    "en": "Choose a admin user number (it must be a whatsapp user",
+                    "fr": "Choisissez un numéro pour l'administrateur (ca doit être un utilisateur whatsapp)"
+                },
+                "example": "41791112233",
+                "default": "41000000000"
+            },
+            {
+                "name": "architecture",
+                "ask": {
+                    "en": "What is the server architecture?",
+                    "fr": "Quelle est l'architecture du serveur ?"
+                },
+                "choices": ["amd64", "i386", "armhf"],
+                "default": "amd64"
+            }
+        ]
+    }
+}
