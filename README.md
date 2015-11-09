@@ -39,9 +39,3 @@ Go do discovery service.
 Search service name "TransWhat"
 Clic on register
 Put your phone number and password (got from last step).
-
-
-## TO DO ##
-
-lunch transwhat service and debug
-

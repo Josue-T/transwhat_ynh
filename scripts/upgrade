@@ -24,11 +24,8 @@ sudo python setup.py install
 cd ..
 
 # Update transwhat
+unzip ../sources/transwhat.zip
 sudo cp -r transwhat/. $final_path/
-
-name=$(echo $2 | cut -d '/' -f 2)
-parent_dir=/var/www/webapp_$user
-final_path=$parent_dir$path
 
 # Install services
 sed -i "s@DOMAIN@$domain@g" ../conf/systemd/spectrum.service
@@ -50,13 +47,12 @@ sudo cp ../conf/backend-logging.cfg /etc/spectrum2/backend-logging.cfg
 # Configure metronome
 sed -i "s@DOMAIN@transwhat.$domain@g" ../conf/metronome.cfg.lua
 sed -i "s@PASSWORD@$spectrum_password@g" ../conf/metronome.cfg.lua
-# sudo mv /etc/metronome/conf.d/$domain.cfg.lua /etc/metronome/conf.d/$domain.cfg.lua.origin
 sudo cp ../conf/metronome.cfg.lua /etc/metronome/conf.d/transwhat.$domain.cfg.lua
 
 # Configure transwhat
 sed -i "s@DB_USER@$db_user@g" ../conf/constants.py
 sed -i "s@DB_PASSWORD@$db_pwd@g" ../conf/constants.py
-sudo cp ../conf/constants.py.sample $final_path/constants.py
+sudo cp ../conf/constants.py $final_path/constants.py
 
 # Set permissions to final_path directory
 sudo chown -R transwhat:transwhat $final_path
@@ -66,10 +62,9 @@ sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/transwhat.conf
 
 # Install doc directory
-sudo mkdir /var/www/transwhat
-sudo cp ../sources/web_doc/. /var/www/transwhat/
-sudo chown www-data:www-data /var/www/transwhat
-sudo chmod 640 /var/www/transwhat
+sudo cp -r ../sources/web_doc/. /var/www/transwhat/
+sudo chown www-data:www-data -R /var/www/transwhat
+sudo chmod 740 /var/www/transwhat
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload
