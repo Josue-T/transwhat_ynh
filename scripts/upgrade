@@ -7,7 +7,7 @@ path=$(sudo yunohost app setting $app path)
 admin=$(sudo yunohost app setting $app admin)
 arch=$(sudo yunohost app setting $app arch)
 spectrum_password=$(sudo yunohost app setting $app spectrum_password)
-db_pwd=$(sudo yunohost app setting $app db_pwd)
+db_pwd=$(sudo yunohost app setting $app mysqlpwd)
 yowsup_version=2.4
 final_path=/opt/yunohost/transwhat
 db_user=transwhat
@@ -34,7 +34,7 @@ sudo systemctl daemon-reload
 
 # Configure spectrum
 sudo mkdir -p /etc/spectrum2/transports
-sed -i "s@_DB_USER@$db_user@g" ../conf/spectrum.cfg
+sed -i "s@DB_USER@$db_user@g" ../conf/spectrum.cfg
 sed -i "s@DB_PASSWORD@$db_pwd@g" ../conf/spectrum.cfg
 sed -i "s@PASSWORD@$spectrum_password@g" ../conf/spectrum.cfg
 sed -i "s@DOMAIN@transwhat.$domain@g" ../conf/spectrum.cfg
@@ -50,7 +50,7 @@ sed -i "s@PASSWORD@$spectrum_password@g" ../conf/metronome.cfg.lua
 sudo cp ../conf/metronome.cfg.lua /etc/metronome/conf.d/transwhat.$domain.cfg.lua
 
 # Configure transwhat
-sed -i "s@DB_USER@$db_user@g" ../conf/constants.py
+sed -i "s@_DB_USER@$db_user@g" ../conf/constants.py
 sed -i "s@DB_PASSWORD@$db_pwd@g" ../conf/constants.py
 sudo cp ../conf/constants.py $final_path/constants.py
 
