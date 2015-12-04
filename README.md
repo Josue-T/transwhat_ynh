@@ -2,7 +2,7 @@
 
 This app is come from this project : https://github.com/stv0g/transwhat
 
-It's a getway to whatsapp from jabber. It's very usefull for a user how use whatsapp and don't whant to use the official client.
+It's a getway to whatsapp from jabber. It's very usefull for a user how use whatsapp and don't want to use the official client.
 
 Warning : the source code of this app is free but the (whatsapp) network is not free.
 
