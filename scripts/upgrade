@@ -54,8 +54,13 @@ sed -i "s@_DB_USER@$db_user@g" ../conf/constants.py
 sed -i "s@DB_PASSWORD@$db_pwd@g" ../conf/constants.py
 sudo cp ../conf/constants.py $final_path/constants.py
 
-# Set permissions to final_path directory
+# Set permissions to final_path directory and log directory
 sudo chown -R transwhat:transwhat $final_path
+sudo mkdir -p /var/log/spectrum2/$domain/backend
+sudo chown -R transwhat:transports /var/log/spectrum2
+sudo chmod 755 /var/log/spectrum2
+sudo chmod 755 /var/log/spectrum2/$domain
+sudo chmod 755 /var/log/spectrum2/$domain/backend
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
