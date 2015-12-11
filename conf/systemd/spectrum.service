@@ -11,7 +11,7 @@ WorkingDirectory=/
 ExecStart=/usr/bin/spectrum2_manager start
 ExecReload=/usr/bin/spectrum2_manager reload
 ExecStop=/usr/bin/spectrum2_manager stop
-PIDFile=/var/run/spectrum2/DOMAIN.pid
+PIDFile=/var/run/spectrum2/transwhat.DOMAIN.pid
 Environment="PYTHON_EGG_CACHE=/opt/yunohost/transwhat/"
 
 [Install]
