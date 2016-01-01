@@ -6,7 +6,7 @@ domain=$1
 path=$2
 admin=$3
 arch=$4
-yowsup_version=2.4
+yowsup_version=2.4.48
 final_path=/opt/yunohost/transwhat
 db_user=transwhat
 
