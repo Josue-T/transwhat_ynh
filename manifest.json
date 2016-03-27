@@ -5,17 +5,22 @@
         "en": "A getway to whatsapp from Jabber",
         "fr": "Une passerelle whatsapp depuis Jabber"
     },
-    "license": "GPL-3",
+    "license": "free",
     "developer": {
         "name": "Josué Tille",
         "email": "josue@familletille.ch",
         "url": "https://myhost.familletille.ch"
     },
+    "services": [
+        "metronome",
+        "mysql"
+    ],
     "multi_instance": "false",
     "arguments": {
         "install" : [
             {
                 "name": "domain",
+                "type": "domain",
                 "ask": {
                     "en": "Choose a domain for your Transwhat",
                     "fr": "Choisissez un domaine pour Transwhat"
@@ -24,6 +29,7 @@
             },
             {
                 "name": "path",
+                "type": "path",
                 "ask": {
                     "en": "Choose a path for your transwhat",
                     "fr": "Choisissez un chemin pour transwhat"

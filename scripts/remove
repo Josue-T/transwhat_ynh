@@ -6,17 +6,17 @@ path=$(sudo yunohost app setting $app path)
 final_path=/opt/yunohost/transwhat
 root_pwd=$(sudo cat /etc/yunohost/mysql)
 db_user=transwhat
-yowsup_version=2.4.48
+yowsup_version='2.4.48'
 
 # Stop service
 sudo service spectrum stop
 sudo service transwhat stop
 
 # Delete databases
-mysql -u root -p$root_pwd -e "DROP DATABASE transwhat ; DROP USER $db_user@localhost ; DROP DATABASE spectrum "
+mysql -u root -p$root_pwd -e "DROP USER $db_user@localhost ; DROP DATABASE spectrum "
 
 # Delete package
-sudo apt-get autoremove -y libtransport2.0 libtransport-plugin2.0 spectrum2 # spectrum2-backend-libpurple
+sudo apt-get autoremove -y libtransport2.0 libtransport-plugin2.0 spectrum2
 
 # Delete transwhat files
 sudo rm -rf $final_path

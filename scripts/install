@@ -6,8 +6,10 @@ domain=$1
 path=$2
 admin=$3
 arch=$4
-yowsup_version=2.4.48
-final_path=/opt/yunohost/transwhat
+yowsup_version='2.4.48'
+spectrum_version='2.0.3-1'
+final_path='/opt/yunohost/transwhat'
+web_path='/var/www/transwhat'
 db_user=transwhat
 
 # Check domain/path availability
@@ -20,16 +22,13 @@ fi
 unzip ../sources/transwhat.zip
 
 # Initialize database for spectrum and mysql and store mysql password for upgrade
-db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
-sudo yunohost app initdb -p $db_pwd -s $(readlink -e transwhat/conf/schema.sql) $db_user
+db_pwd=$(sudo yunohost app initdb -d spectrum $db_user)
 sudo yunohost app setting transwhat mysqlpwd -v $db_pwd
-sudo yunohost app initdb -d spectrum -p $db_pwd $db_user
 
 # Set spectrum password
 spectrum_password=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
 
 # Store config in yunohost
-sudo yunohost app setting transwhat path -v $path
 sudo yunohost app setting transwhat arch -v $arch
 sudo yunohost app setting transwhat admin -v $admin
 sudo yunohost app setting transwhat spectrum_password -v $spectrum_password
@@ -41,9 +40,9 @@ sudo pip install python-axolotl-curve25519 readline
 sudo pip install git+git://github.com/lambdalisue/e4u.git#egg=e4u
 
 # Install spectrum
-sudo dpkg -i --force-depends ../sources/package/libtransport-plugin2.0_1698-66f1e76-1_$arch.deb 
-sudo dpkg -i --force-depends ../sources/package/libtransport2.0_1698-66f1e76-1_$arch.deb 
-sudo dpkg -i --force-depends ../sources/package/spectrum2_1698-66f1e76-1_$arch.deb
+sudo dpkg -i --force-depends ../sources/package/libtransport-plugin2.0_${spectrum_version}_$arch.deb 
+sudo dpkg -i --force-depends ../sources/package/libtransport2.0_${spectrum_version}_$arch.deb 
+sudo dpkg -i --force-depends ../sources/package/spectrum2_${spectrum_version}_$arch.deb
 
 sudo apt-get install -f -y
 
@@ -64,57 +63,62 @@ sudo addgroup transwhat --system --quiet
 sudo adduser transwhat --disabled-login --ingroup transwhat --system --quiet --home $final_path --shell /bin/bash
 
 # Install services
-sed -i "s@DOMAIN@transwhat.$domain@g" ../conf/systemd/spectrum.service
-sudo cp -r ../conf/systemd/. /etc/systemd/system/
+sed -i "s@DOMAIN@transwhat.$domain@g" ../conf/transwhat.service
+sudo cp -r ../conf/transwhat.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable spectrum.service
+sudo systemctl enable transwhat.service
 
 # Configure spectrum
 sudo mkdir -p /etc/spectrum2/transports
-sed -i "s@DB_USER@$db_user@g" ../conf/spectrum.cfg
-sed -i "s@DB_PASSWORD@$db_pwd@g" ../conf/spectrum.cfg
-sed -i "s@PASSWORD@$spectrum_password@g" ../conf/spectrum.cfg
-sed -i "s@DOMAIN@transwhat.$domain@g" ../conf/spectrum.cfg
-sed -i "s@ADMIN_NUMBER@$admin@g" ../conf/spectrum.cfg
-sudo cp ../conf/spectrum.cfg /etc/spectrum2/transports/spectrum.cfg
-sudo cp ../conf/spectrum_manager.cfg /etc/spectrum2/spectrum_manager.cfg
-sudo cp ../conf/logging.cfg /etc/spectrum2/logging.cfg
-sudo cp ../conf/backend-logging.cfg /etc/spectrum2/backend-logging.cfg
+sed -i "s@DB_USER@$db_user@g" ../conf/transwhat.cfg
+sed -i "s@DB_PASSWORD@$db_pwd@g" ../conf/transwhat.cfg
+sed -i "s@PASSWORD@$spectrum_password@g" ../conf/transwhat.cfg
+sed -i "s@SERVICE_DOMAIN@transwhat.$domain@g" ../conf/transwhat.cfg
+sed -i "s@WEB_DOMAIN@transwhat.$domain@g" ../conf/transwhat.cfg
+sed -i "s@ADMIN_NUMBER@$admin@g" ../conf/transwhat.cfg
+sudo cp ../conf/transwhat.cfg /etc/spectrum2/transports/transwhat.cfg
+sudo cp -r ../conf/spectrum-conf/. /etc/spectrum2/
+sudo chown transwhat:transwhat -R /etc/spectrum2
+sudo chmod 740 -R /etc/spectrum2
 
 # Configure metronome
 sed -i "s@DOMAIN@transwhat.$domain@g" ../conf/metronome.cfg.lua
 sed -i "s@PASSWORD@$spectrum_password@g" ../conf/metronome.cfg.lua
 sudo cp ../conf/metronome.cfg.lua /etc/metronome/conf.d/transwhat.$domain.cfg.lua
+sudo chown metronome:metronome /etc/metronome/conf.d/transwhat.$domain.cfg.lua
 
-# Configure transwhat
-sed -i "s@_DB_USER@$db_user@g" ../conf/constants.py
-sed -i "s@DB_PASSWORD@$db_pwd@g" ../conf/constants.py
-sudo cp ../conf/constants.py $final_path/constants.py
-
-# Set permissions to final_path directory and log directory
+# Set permissions to final_path directory, log directory and data directory
 sudo chown -R transwhat:transwhat $final_path
-sudo mkdir -p /var/log/spectrum2/$domain/backends
+sudo mkdir -p /var/log/spectrum2/transwhat.$domain/backends
 sudo chown -R transwhat:transwhat /var/log/spectrum2
-sudo chmod 755 /var/log/spectrum2
-sudo chmod 755 /var/log/spectrum2/transwhat.$domain
-sudo chmod 755 /var/log/spectrum2/transwhat.$domain/backends
+sudo chmod 760 -R /var/log/spectrum2
+sudo mkdir -p /var/lib/spectrum2/transwhat.$domain
+sudo chown -R transwhat:transwhat /var/lib/spectrum2
+sudo chmod 760 -R /var/lib/spectrum2
+sudo mkdir -p /var/run/spectrum2
+sudo chown -R transwhat:transwhat /var/run/spectrum2
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/transwhat.conf
 
-# Install doc directory
-sudo mkdir /var/www/transwhat
-sudo cp -r ../sources/web_doc/. /var/www/transwhat
-sudo chown www-data:www-data -R /var/www/transwhat
-sudo chmod 740 /var/www/transwhat
+# Install doc directory and data directory
+sudo mkdir -p $web_path/spectrum_data
+sudo cp -r ../sources/web_doc/. $web_path
+sudo chown www-data:www-data -R $web_path
+sudo chmod 740 -R $web_path
+sudo chown www-data:transwhat -R $web_path/spectrum_data
+sudo chmod 760 -R $web_path/spectrum_data
 
 # Install logrote
 sed -i "s@DOMAIN@transwhat.$domain@g" ../conf/logrotate
 sudo cp ../conf/logrotate /etc/logrotate.d/transwhat
 
 # Start service
-sudo service spectrum start
+sudo service transwhat start
+
+# Unprotect spectrum_data dir
+sudo yunohost app setting transwhat skipped_uris -v "/spectrum_data"
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service rsyslog restart

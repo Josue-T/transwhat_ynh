@@ -1,0 +1,14 @@
+[Unit]
+Description=spectrum2 whatsapp
+After=syslog.target
+After=network.target
+After=mysqld.service
+After=metronome.service
+
+[Service]
+ExecStart=/usr/bin/spectrum2 --no-daemonize -j DOMAIN --config /etc/spectrum2/transports/transwhat.cfg
+Restart=always
+User=transwhat
+
+[Install]
+WantedBy=multi-user.target
