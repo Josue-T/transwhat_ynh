@@ -65,9 +65,9 @@ sudo chown metronome:metronome /etc/metronome/conf.d/transwhat.$domain.cfg.lua
 # Set permissions to final_path directory, log directory and data directory
 sudo chown -R transwhat:transwhat $final_path
 sudo chown -R transwhat:transwhat /var/log/spectrum2
-sudo chmod 760 -R /var/log/spectrum2
+sudo chmod 750 -R /var/log/spectrum2
 sudo chown -R transwhat:transwhat /var/lib/spectrum2
-sudo chmod 760 -R /var/lib/spectrum2
+sudo chmod 750 -R /var/lib/spectrum2
 sudo chown -R transwhat:transwhat /var/run/spectrum2
 
 # Modify Nginx configuration file and copy it to Nginx conf directory

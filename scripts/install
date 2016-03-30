@@ -91,10 +91,10 @@ sudo chown metronome:metronome /etc/metronome/conf.d/transwhat.$domain.cfg.lua
 sudo chown -R transwhat:transwhat $final_path
 sudo mkdir -p /var/log/spectrum2/transwhat.$domain/backends
 sudo chown -R transwhat:transwhat /var/log/spectrum2
-sudo chmod 760 -R /var/log/spectrum2
+sudo chmod 750 -R /var/log/spectrum2
 sudo mkdir -p /var/lib/spectrum2/transwhat.$domain
 sudo chown -R transwhat:transwhat /var/lib/spectrum2
-sudo chmod 760 -R /var/lib/spectrum2
+sudo chmod 750 -R /var/lib/spectrum2
 sudo mkdir -p /var/run/spectrum2
 sudo chown -R transwhat:transwhat /var/run/spectrum2
 
