@@ -1,6 +1,7 @@
 {
     "name": "Transwhat",
     "id": "transwhat",
+    "packaging_format": 1,
     "description": {
         "en": "A getway to whatsapp from Jabber",
         "fr": "Une passerelle whatsapp depuis Jabber"

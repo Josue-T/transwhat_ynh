@@ -6,7 +6,7 @@ path=$(sudo yunohost app setting $app path)
 final_path=/opt/yunohost/transwhat
 root_pwd=$(sudo cat /etc/yunohost/mysql)
 db_user=transwhat
-yowsup_version='2.4.48'
+yowsup_version='2.4.102'
 
 # Stop service
 sudo service spectrum stop
