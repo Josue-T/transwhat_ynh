@@ -82,6 +82,9 @@ sudo chmod 740 -R $web_path
 sudo chown www-data:transwhat -R $web_path/spectrum_data
 sudo chmod 760 -R $web_path/spectrum_data
 
+# Remove axolotl.db for yowsup see issue : https://github.com/stv0g/transwhat/issues/46
+sudo rm /var/lib/spectrum2/transwhat.$domain/*/axolotl.db
+
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload
 sudo service metronome reload
