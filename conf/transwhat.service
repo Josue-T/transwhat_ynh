@@ -9,6 +9,7 @@ After=metronome.service
 ExecStart=/usr/bin/spectrum2 --no-daemonize -j DOMAIN --config /etc/spectrum2/transports/transwhat.cfg
 Restart=always
 User=transwhat
+RuntimeDirectory=spectrum2
 
 [Install]
 WantedBy=multi-user.target
